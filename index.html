@@ -1119,7 +1119,7 @@ fieldset.fld{border:0;margin:0;padding:0}
   function summary(){
     if (isVisit()) { calSum.textContent = selA ? 'Дата: ' + human(selA) : 'Оберіть день'; return; }
     if (selA && selB) calSum.textContent = human(selA) + ' → ' + human(selB) + ', ' + nightsTxt(Math.round((selB - selA) / 864e5));
-    else if (selA) calSum.textContent = 'Заїзд ' + human(selA) + '. Тепер оберіть день виїзду';
+    else if (selA) calSum.textContent = 'Заїзд ' + human(selA) + ', тепер оберіть день виїзду';
     else calSum.textContent = 'Оберіть дату заїзду';
   }
   function syncInputs(){ fIn.value = selA ? key(selA) : ''; fOut.value = selB ? key(selB) : ''; }
@@ -1131,7 +1131,8 @@ fieldset.fld{border:0;margin:0;padding:0}
       else { selA = x; selB = null; }
     } else {
       if (rangeFree(selA, x)) selB = x;
-      else { calMsg.textContent = 'У цьому проміжку є зайняті ночі. Оберіть коротший період або інші дати.'; selB = null; }
+      else if (!nightBusy(fType.value, x)) { calMsg.textContent = 'Між цими датами є зайняті ночі, тож заїзд тепер ' + human(x); selA = x; selB = null; }
+      else { calMsg.textContent = 'Між цими датами є зайняті ночі. Оберіть інші дати.'; selA = null; selB = null; }
     }
     syncInputs(); render();
   }
